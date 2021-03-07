@@ -1,3 +1,4 @@
-DotNetRobot/bin
-DotNetRobot/obj
+**/bin
+**/obj
 robot/__pycache__
+**/.vs
