@@ -1,38 +1,37 @@
 using System;
 using System.Device.Gpio;
-using System.Threading;
 
 namespace DotNetRobot
 {
-    public class Robot : IDisposable
+    public sealed class Robot : IDisposable
     {
-        private int motorBForwardsPin = 10;
-        private int motorBBackwardsPin = 9;
-        private int motorAForwardsPin = 8;
-        private int motorABackwardsPin = 7;
+        private readonly int _motorBForwardsPin = 10;
+        private readonly int _motorBBackwardsPin = 9;
+        private readonly int _motorAForwardsPin = 8;
+        private readonly int _motorABackwardsPin = 7;
 
-        private GpioController controller;
+        private readonly GpioController _controller;
 
         public Robot()
         {
-            controller = new GpioController(PinNumberingScheme.Logical);
-            controller.OpenPin(motorAForwardsPin, PinMode.Output);
-            controller.OpenPin(motorABackwardsPin, PinMode.Output);
-            controller.OpenPin(motorBForwardsPin, PinMode.Output);
-            controller.OpenPin(motorBBackwardsPin, PinMode.Output);
+            _controller = new GpioController(PinNumberingScheme.Logical);
+            _controller.OpenPin(_motorAForwardsPin, PinMode.Output);
+            _controller.OpenPin(_motorABackwardsPin, PinMode.Output);
+            _controller.OpenPin(_motorBForwardsPin, PinMode.Output);
+            _controller.OpenPin(_motorBBackwardsPin, PinMode.Output);
         }
 
         private void SetPins(PinValue motorAForwards, PinValue motorABackwards, PinValue motorBForwards, PinValue motorBBackwards)
         {
-            controller.Write(this.motorAForwardsPin, motorAForwards);
-            controller.Write(this.motorABackwardsPin, motorABackwards);
-            controller.Write(this.motorBForwardsPin, motorBForwards);
-            controller.Write(this.motorBBackwardsPin, motorBBackwards);
+            _controller.Write(_motorAForwardsPin, motorAForwards);
+            _controller.Write(_motorABackwardsPin, motorABackwards);
+            _controller.Write(_motorBForwardsPin, motorBForwards);
+            _controller.Write(_motorBBackwardsPin, motorBBackwards);
         }
 
         public void Stop() => SetPins(PinValue.Low, PinValue.Low, PinValue.Low, PinValue.Low);
 
-        public void Backwards()=> SetPins(PinValue.Low, PinValue.High, PinValue.Low, PinValue.High);
+        public void Backwards() => SetPins(PinValue.Low, PinValue.High, PinValue.Low, PinValue.High);
 
         public void Forwards() => SetPins(PinValue.High, PinValue.Low, PinValue.High, PinValue.Low);
 
@@ -42,10 +41,10 @@ namespace DotNetRobot
 
         public void Dispose()
         {
-            controller.ClosePin(motorAForwardsPin);
-            controller.ClosePin(motorABackwardsPin);
-            controller.ClosePin(motorBForwardsPin);
-            controller.ClosePin(motorBBackwardsPin);
+            _controller.ClosePin(_motorAForwardsPin);
+            _controller.ClosePin(_motorABackwardsPin);
+            _controller.ClosePin(_motorBForwardsPin);
+            _controller.ClosePin(_motorBBackwardsPin);
         }
     }
 
