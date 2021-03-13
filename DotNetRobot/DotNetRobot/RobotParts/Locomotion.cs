@@ -1,9 +1,9 @@
 using System;
 using System.Device.Gpio;
 
-namespace DotNetRobot
+namespace DotNetRobot.RobotParts
 {
-    public interface IRobot : IDisposable
+    public interface ILocomotion : IDisposable
     {
         void Stop();
 
@@ -16,7 +16,7 @@ namespace DotNetRobot
         void Right();
     }
 
-    public class Robot : IRobot
+    public class Locomotion : ILocomotion
     {
         private readonly IGpioControllerWrapper _controller;
         internal readonly int _motorBForwardsPin = 10;
@@ -24,7 +24,7 @@ namespace DotNetRobot
         internal readonly int _motorAForwardsPin = 8;
         internal readonly int _motorABackwardsPin = 7;
 
-        public Robot(IGpioControllerWrapper controllerWrapper)
+        public Locomotion(IGpioControllerWrapper controllerWrapper)
         {
             _controller = controllerWrapper;
             _controller.OpenPin(_motorAForwardsPin, PinMode.Output);

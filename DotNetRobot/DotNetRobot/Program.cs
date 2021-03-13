@@ -15,7 +15,7 @@ namespace DotNetRobot
             var host = CreateHostBuilder(args).Build();
 
             Console.WriteLine("Hello World!");
-            using(var robot = host.Services.GetRequiredService<IRobot>())
+            using(var robot = host.Services.GetRequiredService<ILocomotion>())
             {
                 robot.Forwards();
                 Thread.Sleep(1000);
@@ -40,7 +40,7 @@ namespace DotNetRobot
                 {
                     cb.Register(context => new GpioController(PinNumberingScheme.Logical)).InstancePerDependency();
                     cb.RegisterType<GpioControllerWrapper>().As<IGpioControllerWrapper>().InstancePerDependency();
-                    cb.RegisterType<Robot>().As<IRobot>().InstancePerLifetimeScope();
+                    cb.RegisterType<Locomotion>().As<ILocomotion>().InstancePerLifetimeScope();
                 }));
         }
     }

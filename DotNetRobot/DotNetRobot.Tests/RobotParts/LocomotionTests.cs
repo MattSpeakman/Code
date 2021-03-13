@@ -1,15 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DotNetRobot.RobotParts;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Device.Gpio;
 
-namespace DotNetRobot.Tests
+namespace DotNetRobot.Tests.RobotParts
 {
     [TestClass]
-    public class RobotTests
+    public class LocomotionTests
     {
         private Mock<IGpioControllerWrapper> _mockControllerWrapper;
-        private Robot instance;
+        private Locomotion instance;
 
         [TestInitialize]
         public void Init()
@@ -18,11 +19,11 @@ namespace DotNetRobot.Tests
             _mockControllerWrapper.Setup(x => x.ClosePin(It.IsAny<int>()));
             _mockControllerWrapper.Setup(x => x.OpenPin(It.IsAny<int>(), It.IsAny<PinMode>()));
             _mockControllerWrapper.Setup(x => x.Write(It.IsAny<int>(), It.IsAny<PinValue>()));
-            instance = new Robot(_mockControllerWrapper.Object);
+            instance = new Locomotion(_mockControllerWrapper.Object);
         }
 
         [TestMethod]
-        public void Robot_PinsAreSetCorrectly()
+        public void Locomotion_PinsAreSetCorrectly()
         {
             Assert.AreEqual(10, instance._motorBForwardsPin);
             Assert.AreEqual(9, instance._motorBBackwardsPin);
@@ -31,7 +32,7 @@ namespace DotNetRobot.Tests
         }
 
         [TestMethod]
-        public void Robot_Dispose_ClosesThePins()
+        public void Locomotion_Dispose_ClosesThePins()
         {
             instance.Dispose();
             _mockControllerWrapper.Verify(x => x.ClosePin(instance._motorBForwardsPin), Times.Once);
@@ -42,7 +43,7 @@ namespace DotNetRobot.Tests
         }
 
         [TestMethod]
-        public void Robot_Stop_SetsAllPinsToLow()
+        public void Locomotion_Stop_SetsAllPinsToLow()
         {
             instance.Stop();
             _mockControllerWrapper.Verify(x => x.Write(instance._motorBForwardsPin, PinValue.Low), Times.Once);
@@ -52,7 +53,7 @@ namespace DotNetRobot.Tests
         }
 
         [TestMethod]
-        public void Robot_Forwards_SetsThePinsCorrectly()
+        public void Locomotion_Forwards_SetsThePinsCorrectly()
         {
             instance.Forwards();
             _mockControllerWrapper.Verify(x => x.Write(instance._motorBForwardsPin, PinValue.High), Times.Once);
@@ -62,7 +63,7 @@ namespace DotNetRobot.Tests
         }
 
         [TestMethod]
-        public void Robot_Backwards_SetsThePinsCorrectly()
+        public void Locomotion_Backwards_SetsThePinsCorrectly()
         {
             instance.Backwards();
             _mockControllerWrapper.Verify(x => x.Write(instance._motorBForwardsPin, PinValue.Low), Times.Once);
@@ -72,7 +73,7 @@ namespace DotNetRobot.Tests
         }
 
         [TestMethod]
-        public void Robot_Right_SetsThePinsCorrectly()
+        public void Locomotion_Right_SetsThePinsCorrectly()
         {
             instance.Right();
             _mockControllerWrapper.Verify(x => x.Write(instance._motorAForwardsPin, PinValue.High), Times.Once);
@@ -82,14 +83,13 @@ namespace DotNetRobot.Tests
         }
 
         [TestMethod]
-        public void Robot_Left_SetsThePinsCorrectly()
+        public void Locomotion_Left_SetsThePinsCorrectly()
         {
             instance.Left();
             _mockControllerWrapper.Verify(x => x.Write(instance._motorAForwardsPin, PinValue.Low), Times.Once);
             _mockControllerWrapper.Verify(x => x.Write(instance._motorABackwardsPin, PinValue.High), Times.Once);
             _mockControllerWrapper.Verify(x => x.Write(instance._motorBForwardsPin, PinValue.High), Times.Once);
             _mockControllerWrapper.Verify(x => x.Write(instance._motorBBackwardsPin, PinValue.Low), Times.Once);
-
         }
     }
 }
